@@ -36,7 +36,7 @@ RUN rm -f /lib/systemd/system/systemd*udev* \
   && rm -f /lib/systemd/system/getty.target
 
 # Create `ansible` user with sudo permissions
-ENV ANSIBLE_USER=ansible SUDO_GROUP=sudo ANSIBLE_STRATEGY_PLUGINS=/usr/local/lib/python3.8/dist-packages/ansible_mitogen/plugins/strategy ANSIBLE_STRATEGY=mitogen_linear
+ENV ANSIBLE_USER=ansible SUDO_GROUP=sudo
 RUN set -xe \
   && groupadd -r ${ANSIBLE_USER} \
   && useradd -m -g ${ANSIBLE_USER} ${ANSIBLE_USER} \
