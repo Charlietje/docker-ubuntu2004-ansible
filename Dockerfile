@@ -6,7 +6,7 @@ ENV pip_packages "ansible"
 # Install dependencies.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-       apt-utils dirmngr curl \
+       apt-utils dirmngr curl gpg-agent\
        locales \
        python3-setuptools \
        python3-pip \
