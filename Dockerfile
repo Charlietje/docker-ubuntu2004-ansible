@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 LABEL maintainer="Jeff Geerling"
 
-ENV pip_packages "ansible mitogen"
+ENV pip_packages "ansible"
 
 # Install dependencies.
 RUN apt-get update \
@@ -28,8 +28,7 @@ RUN chmod +x initctl_faker && rm -fr /sbin/initctl && ln -s /initctl_faker /sbin
 
 # Install Ansible inventory file.
 RUN mkdir -p /etc/ansible
-RUN echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts && \
-    echo "[defaults]\nstrategy_plugins = $(pip3 show mitogen | grep Location | cut -d' ' -f2)/ansible_mitogen/plugins/strategy\nstrategy = mitogen_linear" > /etc/ansible/ansible.cfg
+RUN echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
 
 # Remove unnecessary getty and udev targets that result in high CPU usage when using
 # multiple containers with Molecule (https://github.com/ansible/molecule/issues/1104)
@@ -37,7 +36,7 @@ RUN rm -f /lib/systemd/system/systemd*udev* \
   && rm -f /lib/systemd/system/getty.target
 
 # Create `ansible` user with sudo permissions
-ENV ANSIBLE_USER=ansible SUDO_GROUP=sudo
+ENV ANSIBLE_USER=ansible SUDO_GROUP=sudo ANSIBLE_STRATEGY_PLUGINS=/usr/local/lib/python3.8/dist-packages/ansible_mitogen/plugins/strategy ANSIBLE_STRATEGY=mitogen_linear
 RUN set -xe \
   && groupadd -r ${ANSIBLE_USER} \
   && useradd -m -g ${ANSIBLE_USER} ${ANSIBLE_USER} \
